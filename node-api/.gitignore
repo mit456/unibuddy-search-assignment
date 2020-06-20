@@ -1,5 +1,6 @@
 # Ignore files
 *.swp
+*.log
 
 # Ignore directories
 node_modules
