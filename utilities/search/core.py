@@ -7,6 +7,7 @@ we may need search on text of book pages
 """
 
 
+import json
 from argparse import ArgumentParser
 from summary import SearchSummary
 
@@ -106,4 +107,4 @@ if __name__ == "__main__":
                                       response_count=args.response_count,
                                       query=args.query)
 
-    print("Search results: ", resp_search)
+    print(json.dumps(resp_search))

@@ -10,6 +10,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 class SearchSummary:
     def __init__(self):
         """
@@ -41,7 +42,6 @@ class SearchSummary:
                 # not in range of 128
                 d_summary = "".join([i if ord(i) < 128 else " "
                                      for i in a_summary["summary"]])
-                d_summary_parts = d_summary.split(":")
 
                 # Search logic: Match words from the query in
                 # words of the summary
@@ -57,18 +57,21 @@ class SearchSummary:
                     score = len(isection_list) / len(words_query)
                     # max_score = score
                     summary_meta = {
-                        "id": a_summary["id"],
                         "summary": d_summary,
+                        "id": a_summary["id"],
+                        "query": query,
                         "score": score
                     }
                     summaries.append(summary_meta)
 
-
             # Sort the summaries and select top summaries
             # equal to the response count
             top_summaries = sorted(summaries,
-                                      key=lambda k: k['score'],
-                                      reverse=True)[:response_count]
+                                   key=lambda k: k['score'],
+                                   reverse=True)[:response_count]
+            for k, a_top_summary in enumerate(top_summaries):
+                del a_top_summary["score"]
+
             return top_summaries
 
         elif queries is not None and query is None:
@@ -84,7 +87,6 @@ class SearchSummary:
                     # This is decoded summary after removing chars
                     # not in range of 128
                     d_summary = "".join([j if ord(j) < 128 else " " for j in a_summary["summary"]])
-                    d_summary_parts = d_summary.split(":")
 
                     # Search logic: Match words from the query in
                     # words of the summary
@@ -100,18 +102,23 @@ class SearchSummary:
                         score = len(isection_list) / len(words_query)
                         # max_score = score
                         summary_meta = {
-                            "id": a_summary["id"],
                             "summary": d_summary,
+                            "id": a_summary["id"],
+                            "query": query,
                             "score": score
                         }
                         q_selected_summaries.append(summary_meta)
-
 
                 # Sort the summaries and select top summaries
                 # equal to the response count
                 q_top_summaries = sorted(q_selected_summaries,
                                          key=lambda k: k['score'],
                                          reverse=True)[:response_count]
+
+                # Remove score key from each top summary
+                for k, a_top_summary in enumerate(q_top_summaries):
+                    del a_top_summary["score"]
+
                 summaries.append(q_top_summaries)
             return summaries
 
