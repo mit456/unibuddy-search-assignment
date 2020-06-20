@@ -1,0 +1,4 @@
+# Ignore directories and files
+
+*.swp
+*.pyc
