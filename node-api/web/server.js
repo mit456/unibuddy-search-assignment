@@ -43,11 +43,11 @@ async function main() {
         // Content security policy
         app.use(helmet.contentSecurityPolicy({
           directives: {
-            defaultSrc: [""self""],
-            scriptSrc: [""self""],
-            childSrc: [""none""],
-            objectSrc: [""none""],
-            formAction: [""none""]
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"],
+            childSrc: ["'none'"],
+            objectSrc: ["'none'"],
+            formAction: ["'none'"]
           }
         }));
 
