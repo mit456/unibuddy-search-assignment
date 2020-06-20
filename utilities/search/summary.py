@@ -7,8 +7,10 @@ Search summary module
 from __future__ import division
 import json
 import os
+import requests
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "../../constants/config.json")
 
 
 class SearchSummary:
@@ -16,6 +18,9 @@ class SearchSummary:
         """
         Initialization of summary search module
         """
+
+        with open(CONFIG_PATH) as cf:
+            self.config = json.load(cf)
 
     def search(self, *args, **kwargs):
         """
@@ -31,6 +36,7 @@ class SearchSummary:
             data = json.load(fh)
 
         if query is not None and queries is None:
+            query = query.strip()
             # Collect all summaries to return
             # in response
             summaries = []
@@ -72,6 +78,10 @@ class SearchSummary:
             for k, a_top_summary in enumerate(top_summaries):
                 del a_top_summary["score"]
 
+                # Get author name corresponding to book_id
+                resp_author_ms = self.get_author_name(a_top_summary["id"])
+                a_top_summary["author"] = resp_author_ms
+
             return top_summaries
 
         elif queries is not None and query is None:
@@ -80,6 +90,7 @@ class SearchSummary:
             summaries = []
 
             for i, query in enumerate(queries):
+                query = query.strip()
                 # Select summaries for each queries
                 # and store in q_selected_summaries
                 q_selected_summaries = []
@@ -119,8 +130,31 @@ class SearchSummary:
                 for k, a_top_summary in enumerate(q_top_summaries):
                     del a_top_summary["score"]
 
+                    # Get author name corresponding to book_id
+                    resp_author_ms = self.get_author_name(a_top_summary["id"])
+                    a_top_summary["author"] = resp_author_ms
+
                 summaries.append(q_top_summaries)
             return summaries
+
+    def get_author_name(self, book_id):
+        """
+        Method to get author metadata
+        for another microservice
+        """
+
+        req_data = {
+            "book_id": book_id
+        }
+
+        req = requests.post(self.config["author_ms_api"]["endpoint"],
+                            json=req_data)
+        resp_json = req.json()
+
+        if resp_json:
+            return resp_json["author"]
+        else:
+            return ""
 
 
 if __name__ == "__main__":
