@@ -6,6 +6,8 @@ is to build search on book summary. Maybe in future
 we may need search on text of book pages
 """
 
+
+from argparse import ArgumentParser
 from summary import SearchSummary
 
 
@@ -73,24 +75,35 @@ class Core:
             summary_search_resp = summary_search.search(response_count=self.response_count,
                                                         query=self.query,
                                                         queries=self.queries)
-            print("Resp: ", summary_search_resp)
+            return summary_search_resp
 
 
 if __name__ == "__main__":
-    search_type = "summary"
-    response_count = 3
-    query = "is your problems"
-    queries = ["is your problems",
-               "achieve take book"]
+    parser = ArgumentParser()
+    parser.add_argument("-q", "--query", dest="query",
+                        help="A query text", nargs="?")
+    parser.add_argument("-qs", "--queries", dest="queries",
+                        type=lambda s: s.split(","),
+                        help="list of query text", nargs="*")
+    parser.add_argument("-k", "--response_count", dest="response_count",
+                        help="Top selected summaries count",
+                        type=int, required=True)
+    parser.add_argument("-t", "--type", dest="search_type",
+                        help="Your type of search",
+                        required=True)
 
-    core_obj = Core()
+    # Parse command line arguments
+    args = parser.parse_args()
 
-    # Test call for query
-    resp_search = core_obj.search(search_type=search_type,
-                                  response_count=response_count,
-                                  query=query)
+    if args.queries is not None:
+        core_obj = Core()
+        resp_search = core_obj.search(search_type=args.search_type,
+                                      response_count=args.response_count,
+                                      queries=args.queries[0])
+    elif args.query is not None:
+        core_obj = Core()
+        resp_search = core_obj.search(search_type=args.search_type,
+                                      response_count=args.response_count,
+                                      query=args.query)
 
-    # Test call for array of queries
-    # resp_search = core_obj.search(search_type=search_type,
-    #                               response_count=response_count,
-    #                               queries=queries)
+    print("Search results: ", resp_search)
