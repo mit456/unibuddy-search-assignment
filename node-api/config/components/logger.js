@@ -27,7 +27,6 @@ if (error) {
 let winstonLogger = winston.createLogger({
     level: envVars.LOGGER_LEVEL,
     format: winston.format.json(),
-    defaultMeta: { service: "sf-node-api-service" },
     transports: [
         //
         // - Write to all logs with level `info` and below to `combined.log`
