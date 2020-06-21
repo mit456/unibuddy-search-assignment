@@ -1,5 +1,5 @@
 /*
- *Index file to route to different API
+ * Index file to route to different API
  * modules such as search
  */
 

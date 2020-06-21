@@ -1,7 +1,8 @@
 """
 Search summary module
 
-
+Method help is searching in three sentence
+summaries of book
 """
 
 from __future__ import division
@@ -32,9 +33,12 @@ class SearchSummary:
         queries = kwargs["queries"]
         response_count = kwargs["response_count"]
 
+        # Load dataset
         with open(const_datapath) as fh:
             data = json.load(fh)
 
+        # Whether request was made with query
+        # or queries
         if query is not None and queries is None:
             query = query.strip()
             # Collect all summaries to return
@@ -49,8 +53,6 @@ class SearchSummary:
                 d_summary = "".join([i if ord(i) < 128 else " "
                                      for i in a_summary["summary"]])
 
-                # Search logic: Match words from the query in
-                # words of the summary
                 words_summary = d_summary.split(" ")
                 words_query = query.split(" ")
 
@@ -99,8 +101,6 @@ class SearchSummary:
                     # not in range of 128
                     d_summary = "".join([j if ord(j) < 128 else " " for j in a_summary["summary"]])
 
-                    # Search logic: Match words from the query in
-                    # words of the summary
                     words_summary = d_summary.split(" ")
                     words_query = query.split(" ")
 

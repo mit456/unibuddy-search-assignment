@@ -9,7 +9,7 @@ const helmet = require("helmet")
 const nodeLimits = require("limits")
 const path = require("path")
 
-const reqDuration = 2629746000;
+const reqDuration = 2629746000; // In ms = 30 Days
 
 // Main function starts node API server at
 // PORT set in config

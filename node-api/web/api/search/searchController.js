@@ -23,7 +23,6 @@ const {spawn} = require("child_process")
 exports.searchSummary = async function (req, res, next) {
   try {
     logger.log("debug", "Req body %o", req.body)
-
     logger.log("debug", "Queries", req.body.queries)
 
     // Pre checks in req body data
@@ -66,6 +65,7 @@ exports.searchSummary = async function (req, res, next) {
       })
     }
 
+    // invoke search utility
     let pyShellOpts = {
       mode: 'text',
       args: ['-qs', queriesCommaSeparated, '-k', req.body.responseCount, '-t', searchType]

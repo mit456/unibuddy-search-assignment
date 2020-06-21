@@ -96,6 +96,9 @@ if __name__ == "__main__":
     # Parse command line arguments
     args = parser.parse_args()
 
+    # Whether arguments contain quries
+    # or query. Passing both queries and
+    # query at same time will return None
     if args.queries is not None:
         core_obj = Core()
         resp_search = core_obj.search(search_type=args.search_type,
